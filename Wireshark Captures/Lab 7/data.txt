@@ -1,0 +1,69 @@
+Physical Address / MAC Address
+	98-90-96-AC-0E-BE
+	
+IP Address
+	172.16.27.29
+	
+Subnet Mask
+	255.255.255.0
+	
+Default Gateway (The first hop that a packet makes from our computer to the destination)
+	172.16.27.1
+	
+DHCP Server
+	172.16.13.114
+	
+	
+Packet Summary (Outgoing Message)-	
+44	6.552396	172.16.27.29	128.119.245.12	HTTP	471	GET /wireshark-labs/HTTP-ethereal-lab-file3.html HTTP/1.1 
+
+Ethernet-
+Src MAC: 98-90-96-AC-0E-BE
+Src IP: 172.16.27.29
+Src Port: 58171 (Port on which the browser is running)
+Dest MAC: 00-00-0C-07-AC-1B (The physical address of the default gateway)
+Dest IP: 128.119.245.12
+Dest Port: 80 (All web-server applications by default will have port number 80)
+Type: IPv4 (0x0800)
+
+GET Request - Bytes 54-56
+
+HTTP Request-
+GET /wireshark-labs/HTTP-ethereal-lab-file3.html HTTP/1.1
+Host: gaia.cs.umass.edu
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8
+Accept-Encoding: gzip, deflate, sdch
+Accept-Language: en-US,en;q=0.8
+
+
+Last four bytes of the message - CRC (Cyclic Redundancy Check) bytes
+	0D-0A-0D-0A
+	
+Packet Summary (Incoming Message)-	
+18	4.588429	128.119.245.12	172.16.27.29	HTTP	1514	HTTP/1.1 200 OK  (text/html) 
+
+Ethernet-
+Src MAC: F4-CF-E2-37-7D-7F
+Src IP: 128.119.245.12
+Src Port: 80
+Dest MAC: 98-90-96-AC-0E-BE
+Dest IP: 172.16.27.29
+Dest Port: 58171
+Type: IPv4 (0x0800)
+
+HTTP Response-
+HTTP/1.1 200 OK
+Date: Thu, 16 Mar 2017 08:29:45 GMT
+Server: Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips PHP/5.4.16 mod_perl/2.0.10 Perl/v5.16.3
+Last-Modified: Thu, 16 Mar 2017 05:59:01 GMT
+ETag: "1194-54ad2c1f9fb2b"
+Accept-Ranges:  none
+Content-Length: 4500
+Keep-Alive: timeout=5, max=100
+Connection: Keep-Alive
+Content-Type: text/html; charset=UTF-8
+
+
