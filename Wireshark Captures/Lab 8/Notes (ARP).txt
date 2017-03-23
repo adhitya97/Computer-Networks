@@ -1,0 +1,36 @@
+ARP - (23-March-2017)
+
+ARP  Request - Broadcast
+ARP Response - Unicast
+
+
+ARP Request - 
+	If the Dest. MAC Address in the message is FF:FF:FF:FF:FF:FF, it is a broadcast message.
+	Dest. IP Address while sending a broadcast message does not matter.
+	Type for ARP - 0806
+	Data Size (28 Bytes)- Contains the Source IP, Source MAC and the IP of intended receiver (MAC field for the intended receiver is 00:00:00:00:00:00).
+	0001 - ARP Request (Present in 28 Byte data)
+	
+	2272	291.108629	Dell_ac:0e:be	Broadcast	ARP	42	Who has 172.16.27.35? Tell 172.16.27.29
+
+	ARP Handler lies just above Data-Link layer- between data-link and network layer(Preamble, CRC, Source and Dest MAC are stripped). Only DATA and TYPE are sent through.
+
+ARP Response -
+	The intended receiver then receives the ARP Request and then responds with its MAC Address.
+	Reply Type - 0806
+	Takes the 28-byte data and changes the MAC field from 00:00:00:00:00:00 to its actual MAC address.
+	0002 - ARP Response (Present in 28 Byte data)	
+	
+	2273	291.108886	Dell_ac:6e:e3	Dell_ac:0e:be	ARP	60	172.16.27.35 is at 98:90:96:ac:6e:e3
+	
+After the sender gets the "intended receiver's" MAC, it sends the actual message through IPv4 Protocol.
+A table is then created with IPs and corresponding MAC Addresses (ARP Table) - This is used for future reference; instead of broadcasting again for communicating with the same computer.
+
+To view ARP communications, we need to clear
+	i) Browser Cache
+	ii) ARP Table : Command Prompt (As Administrator) ->  
+						netsh interface ip delete arpcache (to flush ARP Cache)
+						arp -a (to view the arp address)
+						arp -a -d [or arp -d *](to delete all ARP table entries)
+						arp -d 172.16.22.15 (to delete specific ARP table entry)					
+	
