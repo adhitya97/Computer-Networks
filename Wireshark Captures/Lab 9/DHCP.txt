@@ -1,0 +1,79 @@
+Dynamic Host Configuration Protocol (DHCP)
+
+DHCP Server
+	Any computer in a network can make a request to the DHCP for an IP Address. The DHCP Server assigns an IP for every computer which makes the request.
+	Runs in the Application Layer
+	
+The node which needs an IP Address sends a 'DHCP Discover Message'. The DHCP Server sends the 'DHCP Offer'.
+The messages that are sent are broadcast message.
+
+Contents of a DHCP Discover Message:
+	<SMAC;DMAC;SIP;Data;CRC Bytes>
+		SMAC - MAC of node
+		DMAC - MAC of DHCP Server (FF:FF:FF:FF:FF:FF - Since actual MAC of the DHCP server in unknown, message is broadcast (Data Link Layer))
+		SIP - IP of node (0.0.0.0 - Since the node does not have an IP yet)
+		DIP - IP of the DHCP Server (255.255.255.255 - Since actual IP of the DHCP server in unknown, message is broadcast (IP Layer))
+		Data - DHCP Discover
+
+Contents of a DHCP Offer:
+	<SMAC;DMAC;SIP;Data;CRC Bytes>
+		SMAC - MAC of DHCP Server
+		DMAC - MAC of node
+		SIP - IP of DHCP Server
+		DIP - IP of the node (255.255.255.255 - Since actual IP of the node in unknown (0.0.0.0), message is broadcast (IP Layer))
+		Data - DHCP Offer (Contains the IP address to be assigned to the node. The IP is valid for 300 seconds)
+
+DHCP Request -
+	This is sent by the client node. When multiple DHCP Servers are available, a DHCP request is sent by the client (broadcast); this lets the DHCP Servers know that a node has chosen a particular DHCP Server.
+
+DHCP Acknowledge - 
+	The DHCP Server sends the acknowledge message to the client. This is also broadcast (to let all the nodes in the network know that a new node has joined the network)
+
+Current Network Status - 
+	Ethernet adapter Ethernet:
+
+	   Connection-specific DNS Suffix  . : BITSDUBAI.LOCAL
+	   Description . . . . . . . . . . . : Intel(R) Ethernet Connection I217-LM
+	   Physical Address. . . . . . . . . : 98-90-96-AC-0E-BE
+	   DHCP Enabled. . . . . . . . . . . : Yes
+	   Autoconfiguration Enabled . . . . : Yes
+	   Link-local IPv6 Address . . . . . : fe80::30e1:3517:4677:cd03%3(Preferred)
+	   IPv4 Address. . . . . . . . . . . : 172.16.27.29(Preferred)
+	   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+	   Lease Obtained. . . . . . . . . . : Thursday, March 30, 2017 9:26:22 AM
+	   Lease Expires . . . . . . . . . . : Friday, March 31, 2017 9:26:21 AM
+	   Default Gateway . . . . . . . . . : 172.16.27.1
+	   DHCP Server . . . . . . . . . . . : 172.16.13.114
+	   DHCPv6 IAID . . . . . . . . . . . : 60330134
+	   DHCPv6 Client DUID. . . . . . . . : 00-01-00-01-1C-AB-E3-2D-98-90-96-AC-0E-BE
+
+	   DNS Servers . . . . . . . . . . . : 172.16.13.111
+	                                       172.16.13.112
+	   NetBIOS over Tcpip. . . . . . . . : Enabled
+
+	Tunnel adapter isatap.BITSDUBAI.LOCAL:
+
+	   Media State . . . . . . . . . . . : Media disconnected
+	   Connection-specific DNS Suffix  . : BITSDUBAI.LOCAL
+	   Description . . . . . . . . . . . : Microsoft ISATAP Adapter
+	   Physical Address. . . . . . . . . : 00-00-00-00-00-00-00-E0
+	   DHCP Enabled. . . . . . . . . . . : No
+	   Autoconfiguration Enabled . . . . : Yes
+
+Surrender the IP Address - "ipconfig /release" (IP becomes 0.0.0.0 after this)
+To renew IP Address (new request) - "ipconfig /renew" (We get an IP after this)
+Wireshark Display Filter for DHCP related messages- "bootp"
+Then, we make a new request.
+
+Source Port (Client)- 68
+Destination Port (DHCP Server) - 67
+
+
+DHCP messages are sent over UDP.
+
+Relay Agent - 
+	When the Client and DHCP Server are not part of the same network.Therefore, we need an agent which would forward the message to DHCP Server and vice versa.
+
+The DHCP Server tells us where the router is.
+
+IP Address Lease Time - 1 Day.
