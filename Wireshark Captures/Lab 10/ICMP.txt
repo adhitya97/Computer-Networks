@@ -1,0 +1,52 @@
+6-April-2017 (Lab 10)
+Internet Control Message Protocol (ICMP)
+
+DHCP Server - Provides IP Address 
+HTTP Server - Provides web content
+
+ICMP-
+	'ping' is used to check if you can reach a particular server. The ICMP sends a echo ping request message.
+
+	If there is a broken link, the router can't forward the packet! The router then sends an ICMP message to the client saying that connectivity is not possible.
+
+	Some instances when router sends a ICMP message-
+		1) When router can't send a packet to the destination.
+		2) Flow-Control Mismatch: When the "send buffer" of the router is full (the client is faster than the server), the client is asked to send the packets at a slower rate (by the server). This is done through a ICMP message.
+		3) When we want to check if a particular server (node) is reachable [through the ping command].
+
+		ICMP packet:
+			<IP Header, Type, Code, Checksum, Optional Parameters, Data>
+			           <1        , 1   , 1   , 4 octets>
+				Checksum - Used to check integrity of ICMP header.
+				ICMP header - Type + Code + Checksum + Optional Parameters
+
+		Command Used: "ping -n 10 www.ust.hk"
+		Results:
+			C:\Users\admin>ping -n 10 www.ust.hk
+
+			Pinging www.ust.hk [143.89.14.2] with 32 bytes of data:
+			Reply from 143.89.14.2: bytes=32 time=883ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1055ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1192ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=941ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=804ms TTL=48
+			Request timed out.
+			Reply from 143.89.14.2: bytes=32 time=1159ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1035ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1188ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=845ms TTL=48
+
+			Ping statistics for 143.89.14.2:
+			    Packets: Sent = 10, Received = 9, Lost = 1 (10% loss),
+			Approximate round trip times in milli-seconds:
+			    Minimum = 804ms, Maximum = 1192ms, Average = 1011ms
+
+			Each router decreases TTL by one factor. If the TTL becomes 0, the router stops forwarding the packet to the subsequent router. That is how we get "Request timed out" messages.
+
+			TTL = 48 implies that the message has to reach the destination within 48 hops, or else, the packet is lost. 
+			This problem happens when illegal packets are sent, but can also happen to legal messages sometimes.
+
+			Type = 8; Code = 0; Echo ping request
+			Type = 0; Code = 0; Echo ping reply
+
+		Identifier, Sequence number and data must be same in ICMP request and response.
