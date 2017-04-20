@@ -1,0 +1,100 @@
+20-April-2017 (Lab 11)
+Internet Control Message Protocol (ICMP)
+
+DHCP Server - Provides IP Address 
+HTTP Server - Provides web content
+
+ICMP-
+	'ping' is used to check if you can reach a particular server. The ICMP sends a echo ping request message.
+
+	If there is a broken link, the router can't forward the packet! The router then sends an ICMP message to the client saying that connectivity is not possible.
+
+	Some instances when router sends a ICMP message-
+		1) When router can't send a packet to the destination.
+		2) Flow-Control Mismatch: When the "send buffer" of the router is full (the client is faster than the server), the client is asked to send the packets at a slower rate (by the server). This is done through a ICMP message.
+		3) When we want to check if a particular server (node) is reachable [through the ping command].
+
+		ICMP packet:
+			<IP Header, Type, Code, Checksum, Optional Parameters, Data>
+			           <1        , 1   , 1   , 4 octets>
+				Checksum - Used to check integrity of ICMP header.
+				ICMP header - Type + Code + Checksum + Optional Parameters
+
+		Command Used: "ping -n 10 www.ust.hk"
+		Results:
+			C:\Users\admin>ping -n 10 www.ust.hk
+
+			Pinging www.ust.hk [143.89.14.2] with 32 bytes of data:
+			Reply from 143.89.14.2: bytes=32 time=883ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1055ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1192ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=941ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=804ms TTL=48
+			Request timed out.
+			Reply from 143.89.14.2: bytes=32 time=1159ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1035ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=1188ms TTL=48
+			Reply from 143.89.14.2: bytes=32 time=845ms TTL=48
+
+			Ping statistics for 143.89.14.2:
+			    Packets: Sent = 10, Received = 9, Lost = 1 (10% loss),
+			Approximate round trip times in milli-seconds:
+			    Minimum = 804ms, Maximum = 1192ms, Average = 1011ms
+
+			Each router decreases TTL by one factor. If the TTL becomes 0, the router stops forwarding the packet to the subsequent router. That is how we get "Request timed out" messages.
+
+			TTL = 48 implies that the message has to reach the destination within 48 hops, or else, the packet is lost. 
+			This problem happens when illegal packets are sent, but can also happen to legal messages sometimes.
+
+			Type = 8; Code = 0; Echo ping request
+			Type = 0; Code = 0; Echo ping reply
+
+		Identifier, Sequence number and data must be same in ICMP request and response.
+
+		The ICMP Request begins at the IP layer. 
+
+		To trace the path to the destination, we use "tracert" command. Eg) "tracert www.google.com"
+		Each router on the path from the source to the destination, decreases the TTL factor by 1, and only then looks at the routing table.
+		If the factor is 0, the packet is not forwarded, else, it is forwarded.
+
+		"ICMP TTL Exceeded" is generated (addressed to the sender) when the TTL=0 
+
+		Maximum hops between source and destination = 30 (regardless of distance)
+
+
+		No Response Found - Means Echo response is not found. During the tracert command, each of the hops are displayed. The intermediate hops do not give a ICMP Echo Response. Only the actual destination does that!! 
+
+		Why do we have two SIP in the ICMP message?
+			To show that TTL has been exceeded and that the packet was not delivered.
+
+
+		Questions https://kellyannc.wordpress.com/csc-251/wireshark-lab-5/
+
+			1. What is the IP address of your host? What is the IP address of the destination host?
+				IP host address: , IP destination address: 
+			2. Why is it that an ICMP packet does not have source and destination port numbers?
+				The ICMP packet does not have source and destination port numbers because it was designed to communicate network-layer information between hosts and routers, not between application layer processes.
+			3. Examine one of the ping request packets sent by your host. What are the ICMP type and code numbers? What other fields does this ICMP packet have? How many bytes are the checksum, sequence number and identifier fields?
+				ICMP type – 8, ICMP code 0.
+				Checksum, identifier, sequence number and data fields.
+				Checksum – 2, Identifier – 2, Sequence number – 2.
+			4. Examine the corresponding ping reply packet. What are the ICMP type and code numbers? What other fields does this ICMP packet have? How many bytes are the checksum, sequence number and identifier fields?
+				ICMP type – 0, ICMP code – 0.
+				Checksum, identifier, sequence number, and data fields.
+				Checksum – 2,  Identifier – 2, Sequence number – 2.
+			5. What is the IP address of your host? What is the IP address of the target destination host?
+				IP host address:  , IP target address: 
+			6. If ICMP sent UDP packets instead (as in Unix/Linux), would the IP protocol number still be 01 for the probe packets? If not, what would it be?
+				No, the IP protocol number should be 0x11.
+			7. Examine the ICMP echo packet in your screenshot. Is this different from the ICMP ping query packets in the first half of this lab? If yes, how so?
+				No.
+			8. Examine the ICMP error packet in your screenshot. It has more fields than the ICMP echo packet. What is included in those fields?
+				The IP header and the first 8 bytes of the original ICMP packet.
+			9. Examine the last three ICMP packets received by the source host. How are these packets different from the ICMP error packets? Why are they different?
+				The last 3 packets are type 0.
+				They are different because all the datagrams made it to the hose before the TTL expired.	
+			10. Within the tracert measurements, is there a link whose delay is significantly longer than others? Refer to the screenshot in Figure 4, is there a link whose delay is significantly longer than others? On the basis of the router names, can you guess the location of the two routers on the end of this link?
+				Yes, from 6 to 7 there was a long delay.
+				Yes, from 9 to 10 in figure 4.
+				In figure 4 the first location is NYC and the second is Pastourelle.
+
