@@ -1,0 +1,45 @@
+import java.io.*;
+
+import java.net.*;
+
+
+public class htmlClient
+{
+
+	public static void main(String[] args) throws Exception
+	{
+
+		URL url = new URL("https://smartspot.co.in");
+
+		URLConnection connection = url.openConnection();
+
+		connection.connect();
+
+
+		BufferedReader fromServer = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+		String fileName = "/home/jeevan/Desktop/code.html";
+
+		FileWriter fileOutput = new FileWriter(fileName, true);
+
+		String html;
+
+
+
+		while((html = fromServer.readLine()) != null)
+
+		{
+	
+			fileOutput.write(html);
+
+			fileOutput.write("\n");
+
+		}
+
+
+		fileOutput.flush();
+
+		fileOutput.close();
+
+	}
+}
